@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postfix Expression Evaluator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <div class="logo-text">
+                        <span class="logo-line">POSTFIX</span>
+                        <span class="logo-line">EXPRESSION</span>
+                        <span class="logo-line accent">EVALUATOR</span>
+                    </div>
+                </div>
+                <ul class="nav-menu">
+                    <li>
+                        <a href="#evaluator" class="nav-link">Evaluator</a>
+                    </li>
+                    <li>
+                        <a href="#examples" class="nav-link">Examples</a>
+                    </li>
+                    <li>
+                        <button type="button" class="nav-link nav-modal-link">Learn</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="hero">
+            <div class="hero-container">
+                <div class="hero-badge">Live Stack Demo</div>
+                <p class="hero-subtitle">Understand postfix expressions through stack visualization</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Evaluator Section -->
+    <section id="evaluator" class="section">
+        <div class="container">
+            <div class="evaluator-card glass-card">
+                <div class="card-header">
+                    <h2 class="card-title">Evaluate Postfix Expression</h2>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <label for="expressionInput" class="input-label">Enter postfix expression...</label>
+                        <input 
+                            type="text" 
+                            id="expressionInput" 
+                            class="expression-input" 
+                            placeholder="5 6 2 + *"
+                            autocomplete="off"
+                        >
+                    </div>
+                    <div class="button-group">
+                        <button id="evaluateBtn" class="btn btn-primary">
+                            <span class="btn-text">Evaluate</span>
+                        </button>
+                        <button id="clearBtn" class="btn btn-secondary">
+                            <span class="btn-text">Clear</span>
+                        </button>
+                        <button id="loadExampleBtn" class="btn btn-secondary">
+                            <span class="btn-text">Load Example</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Card -->
+            <div id="resultCard" class="result-card glass-card" style="display: none;">
+                <div class="card-header">
+                    <h2 class="card-title">FINAL RESULT</h2>
+                </div>
+                <div class="card-body result-body">
+                    <div class="result-value" id="resultValue">0</div>
+                    <div class="result-details">
+                        <div class="result-item">
+                            <span class="result-label">Expression:</span>
+                            <span class="result-data" id="resultExpression"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Status:</span>
+                            <span class="result-data status-success">Successfully Evaluated</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Tokens:</span>
+                            <span class="result-data" id="resultTokens"></span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Operations:</span>
+                            <span class="result-data" id="resultOperations"></span>
+                        </div>
+                    </div>
+                    <button id="viewStepsBtn" class="btn btn-primary btn-full">
+                        <span class="btn-text">View Step-by-Step</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Card -->
+            <div id="errorCard" class="error-card glass-card" style="display: none;">
+                <div class="card-body">
+                    <div class="error-content">
+                        <span class="error-icon">⚠️</span>
+                        <span class="error-message" id="errorMessage"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">EXAMPLES</h2>
+            </div>
+            <div class="examples-grid">
+                <div class="example-card glass-card" data-example="5 6 2 + *">
+                    <div class="example-expression">5 6 2 + *</div>
+                    <div class="example-result">= 40</div>
+                    <button class="example-load-btn">Load</button>
+                </div>
+                <div class="example-card glass-card" data-example="25 5 / 3 +">
+                    <div class="example-expression">25 5 / 3 +</div>
+                    <div class="example-result">= 8</div>
+                    <button class="example-load-btn">Load</button>
+                </div>
+                <div class="example-card glass-card" data-example="8 2 -">
+                    <div class="example-expression">8 2 -</div>
+                    <div class="example-result">= 6</div>
+                    <button class="example-load-btn">Load</button>
+                </div>
+                <div class="example-card glass-card" data-example="8 2 /">
+                    <div class="example-expression">8 2 /</div>
+                    <div class="example-result">= 4</div>
+                    <button class="example-load-btn">Load</button>
+                </div>
+                <div class="example-card glass-card" data-example="5 6 + 2 *">
+                    <div class="example-expression">5 6 + 2 *</div>
+                    <div class="example-result">= 22</div>
+                    <button class="example-load-btn">Load</button>
+                </div>
+                <div class="example-card glass-card" data-example="2 3 ^">
+                    <div class="example-expression">2 3 ^</div>
+                    <div class="example-result">= 8</div>
+                    <button class="example-load-btn">Load</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step by Step Modal -->
+    <div id="stepsModal" class="modal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">HOW THIS EXPRESSION WORKED</h2>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="expression-display">
+                    <span class="expression-label">Expression:</span>
+                    <span class="expression-value" id="modalExpression"></span>
+                </div>
+
+                <div class="voice-controls" aria-label="Voice explanation controls">
+                    <button type="button" class="control-btn voice-btn" id="voiceCurrentStepBtn">🔊 Explain current step</button>
+                    <button type="button" class="control-btn" id="voicePlayBtn">Explain all steps</button>
+                    <button type="button" class="control-btn" id="voicePauseBtn" disabled>Pause</button>
+                    <button type="button" class="control-btn" id="voiceStopBtn" disabled>Stop</button>
+                    <span class="voice-status" id="voiceStatus" aria-live="polite">Listen to the steps using your browser's voice.</span>
+                </div>
+                
+                <div class="modal-main">
+                    <div class="steps-table-container">
+                        <table class="steps-table">
+                            <thead>
+                                <tr>
+                                    <th>Step</th>
+                                    <th>Token</th>
+                                    <th>Action</th>
+                                    <th>Operation</th>
+                                    <th>Stack</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stepsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="visualization-section">
+                        <div class="visual-stack-container">
+                            <h3 class="viz-title">VISUAL STACK</h3>
+                            <div class="viz-stack">
+                                <div class="viz-stack-label">TOP</div>
+                                <div class="viz-stack-items" id="vizStackItems">
+                                </div>
+                                <div class="viz-stack-base"></div>
+                                <div class="viz-stack-label-bottom">Stack</div>
+                            </div>
+                        </div>
+                        
+                        <div class="current-step-info">
+                            <h3 class="viz-title">CURRENT STEP</h3>
+                            <div class="step-explanation">
+                                <div class="step-info-row">
+                                    <span class="step-info-label">Token:</span>
+                                    <span class="step-info-value" id="currentToken"></span>
+                                </div>
+                                <div class="step-info-row">
+                                    <span class="step-info-label">Operation:</span>
+                                    <span class="step-info-value" id="currentOperation"></span>
+                                </div>
+                                <div class="step-info-row full">
+                                    <span class="step-info-label">What happened?</span>
+                                    <div class="step-info-description" id="currentExplanation"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stack-operation-indicator">
+                            <h3 class="viz-title">STACK OPERATION</h3>
+                            <div class="operation-display">
+                                <div class="operation-type" id="operationType">PUSH</div>
+                                <div class="operation-details" id="operationDetails"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-controls">
+                    <button id="prevStepBtn" class="control-btn">← Previous</button>
+                    <button id="playStepBtn" class="control-btn play-btn">
+                        <span id="playBtnIcon">▶</span> <span id="playBtnText">Play</span>
+                    </button>
+                    <button id="nextStepBtn" class="control-btn">Next →</button>
+                    <button id="resetStepBtn" class="control-btn">↻ Reset</button>
+                    <div class="step-counter">
+                        <span id="stepCounter">Step 1 of 1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="learnModal" class="modal">
+        <div class="modal-overlay" data-close="learnModal"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">LEARN</h2>
+                <button class="modal-close" data-close="learnModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="learn-grid">
+                    <div class="learn-card glass-card">
+                        <h3 class="learn-title">INFIX VS POSTFIX</h3>
+                        <div class="comparison">
+                            <div class="comparison-item">
+                                <h4 class="comparison-subtitle">Infix</h4>
+                                <div class="comparison-example">5 + 6</div>
+                            </div>
+                            <div class="comparison-arrow">→</div>
+                            <div class="comparison-item">
+                                <h4 class="comparison-subtitle">Postfix</h4>
+                                <div class="comparison-example">5 6 +</div>
+                            </div>
+                        </div>
+                        <div class="comparison">
+                            <div class="comparison-item">
+                                <h4 class="comparison-subtitle">Infix</h4>
+                                <div class="comparison-example">(5 + 6) * 2</div>
+                            </div>
+                            <div class="comparison-arrow">→</div>
+                            <div class="comparison-item">
+                                <h4 class="comparison-subtitle">Postfix</h4>
+                                <div class="comparison-example">5 6 + 2 *</div>
+                            </div>
+                        </div>
+                        <p class="learn-note">Postfix expressions do not require parentheses to determine operator order.</p>
+                    </div>
+                    <div class="learn-card glass-card">
+                        <h3 class="learn-title">WHAT IS A STACK?</h3>
+                        <p class="learn-text">A Stack is a linear data structure that follows the <strong>LIFO</strong> (Last In First Out) principle.</p>
+                        <p class="learn-text">Think of it like a stack of plates - you can only add or remove from the top.</p>
+                        <div class="stack-visual">
+                            <div class="stack-label">TOP</div>
+                            <div class="stack-box">8</div>
+                            <div class="stack-box">5</div>
+                            <div class="stack-base"></div>
+                            <div class="stack-label-bottom">Stack</div>
+                        </div>
+                        <p class="learn-text"><strong>Operations:</strong> push(), pop(), peek(), is_empty(), size()</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-glow"></div>
+        <div class="footer-content">
+            <span class="footer-brand-name">NUTAN MAHARASHTRA INSTITUTE OF TECHNOLOGY</span>
+            <div class="footer-made-by">
+                <span>Made by</span>
+                <strong>AMAN SHARMA</strong>
+                <span>&</span>
+                <strong>SURAJ SHETKAR</strong>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
